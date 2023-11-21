@@ -1,46 +1,72 @@
-﻿using System;
+using System;
 
-// Базовый класс для печатных изданий
+// Абстрактный класс для печатных изданий
 abstract class PrintedMaterial
 {
     public string Title { get; set; }
     public int Year { get; set; }
+    public Publisher Publisher { get; set; }
+
+    public virtual void Print()
+    {
+        Console.WriteLine("Печатаем печатный материал.");
+    }
+
     public override string ToString()
     {
-        return $"{GetType().Name} - Title: {Title}, Year: {Year}";
+        if(Publisher == null)
+            return this.GetType().ToString() + $" - Название: {Title}, Год: " + (Year >= 0 ? Year : (Math.Abs(Year) + " до Н.Э.") + ", издательство отсутствует\n");
+        else
+            return this.GetType().ToString() + $" - Название: {Title}, Год: " + (Year >= 0 ? Year : (Math.Abs(Year) + " до Н.Э.") + $", {Publisher.ToString()}\n");
+
     }
 }
 
 // Класс Журнал, наследуется от PrintedMaterial
-public class Magazine : PrintedMaterial
+class Magazine : PrintedMaterial
 {
     public string Category { get; set; }
 
+    public override void Print()
+    {
+        Console.WriteLine("Печатаем журнал.");
+    }
+
     public override string ToString()
     {
-        return base.ToString() + $", Category: {Category}";
+        return base.ToString() + $", Тема: {Category}";
     }
 }
 
 // Класс Книга, наследуется от PrintedMaterial
-public class Book : PrintedMaterial
+class Book : PrintedMaterial
 {
-    public string Author { get; set; }
+    public Author author { get; set; }
+
+    public override void Print()
+    {
+        Console.WriteLine("Печатаем книгу.");
+    }
 
     public override string ToString()
     {
-        return base.ToString() + $", Author: {Author}";
+        return base.ToString() + $"{author}";
     }
 }
 
 // Класс Учебник, наследуется от Book
-public class Textbook : Book
+class Textbook : Book
 {
     public string Subject { get; set; }
 
+    public override void Print()
+    {
+        Console.WriteLine("Печатаем учебник.");
+    }
+
     public override string ToString()
     {
-        return base.ToString() + $", Тема: {Subject}";
+        return base.ToString() + $", Предмет: {Subject}";
     }
 }
 
@@ -51,31 +77,31 @@ public class Person
 
     public override string ToString()
     {
-        return $"{GetType().Name} - Имя: {Name}";
+        return this.GetType().ToString() + $" - Имя: {Name}\n";
     }
 }
 
 // Класс Автор, наследуется от Person
 public class Author : Person
 {
-    public string Genre { get; set; }
-
     public override string ToString()
     {
-        return base.ToString() + $", Genre: {Genre}";
+            return base.ToString();;
     }
 }
 
-// Класс Издательство
-sealed class Publisher
+// Бесплодный класс Издательство
+sealed public class Publisher
 {
     public string Name { get; set; }
 
     public override string ToString()
     {
-        return $"{GetType().Name} - Название: {Name}";
+            return this.GetType().ToString() + $" - Название: {Name}";
+
     }
 }
+
 // Пример использования
 class Program
 {
